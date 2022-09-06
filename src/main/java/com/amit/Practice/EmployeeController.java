@@ -41,7 +41,7 @@ public class EmployeeController {
 	}
 
 	@PostMapping("employee/create")
-	public Map<String, Employee> createEmployee(@RequestBody Employee employee) {
+	public Map<String, Employee> createEmployee(@RequestBody Employee employee) throws EmployeeValidationException{
 		return employeeBuilder.createEmployee(employee);
 	}
 
@@ -51,7 +51,8 @@ public class EmployeeController {
 	}
 	
 	@PutMapping("employee/update/{id}")
-	public Map<String, Employee> updateEmployee(@RequestBody Employee employee, @PathVariable int id) throws EmployeeNotFoundException
+	public Map<String, Employee> updateEmployee(@RequestBody Employee employee, @PathVariable int id) 
+			throws EmployeeNotFoundException, EmployeeValidationException
 	{
          return employeeBuilder.updateEmployee(employee, id);		
 	}
