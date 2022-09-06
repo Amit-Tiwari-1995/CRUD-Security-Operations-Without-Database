@@ -9,9 +9,16 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @RestControllerAdvice
 public class EmployeeExceptionValidation {
 
-	
 	@ExceptionHandler
 	public Map<String, String> employeeNotFoundExceptionValidation(EmployeeNotFoundException ex) {
+		Map<String, String> Errormap = new HashMap<>();
+		Errormap.put("errorMessage", ex.getMessage());
+
+		return Errormap;
+	}
+
+	@ExceptionHandler
+	public Map<String, String> employeeValidationExceptionValidation(EmployeeValidationException ex) {
 		Map<String, String> Errormap = new HashMap<>();
 		Errormap.put("errorMessage", ex.getMessage());
 
