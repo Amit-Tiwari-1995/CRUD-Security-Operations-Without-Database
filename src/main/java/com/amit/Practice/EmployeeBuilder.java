@@ -2,9 +2,12 @@ package com.amit.Practice;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.IntStream;
 
 import org.springframework.context.annotation.EnableMBeanExport;
@@ -15,35 +18,64 @@ import org.springframework.stereotype.Service;
 public class EmployeeBuilder {
 
 	private List<Employee> listEmployees = new ArrayList<Employee>(
-			Arrays.asList(new Employee(2, "ajeesh", 89000.00), new Employee(1, "rajat", 74000.00)));
-
-	public List<Employee> employeeBuilder() {
-
-		return listEmployees;
-
-	}
+			Arrays.asList(new Employee(2, "Ajeesh Nair", 89000.00), new Employee(1, "Suraj Bhakoria", 74000.00)));
 
 	// list of employees
 
 	public List<Employee> getAllEmployees() {
-		return listEmployees = employeeBuilder();
+
+		Collections.sort(listEmployees, (a, b) -> a.getId() - b.getId());
+		return listEmployees;
+
 	}
 
 	public Employee getEmployeeById(int id) throws EmployeeNotFoundException {
-		Employee employee = employeeBuilder().stream().filter(l -> l.getId() == id).findFirst()
+		Employee employee = listEmployees.stream().filter(l -> l.getId() == id).findFirst()
 				.orElseThrow(() -> new EmployeeNotFoundException("Employee not found with id: " + id));
 
 		return employee;
 
 	}
 
-	public Map<String, Employee> createEmployee(Employee employee) {
+	public Map<String, Employee> createEmployee(Employee employee) throws EmployeeValidationException {
 		Employee newEmployee = new Employee();
+
+		for (int i = 0; i < listEmployees.size(); i++) {
+			if (employee.getId() == listEmployees.get(i).getId()) {
+				throw new EmployeeValidationException("Employee id is duplicate with: " + listEmployees.get(i));
+			}
+		}
+
 		newEmployee.setId(employee.getId());
+
+		if (employee.getName() == null || employee.getName().isEmpty()) {
+			throw new EmployeeValidationException("Name can't be null or blank value");
+		}
+
+		String regex = "(?=^.{0,40}$)^[a-zA-Z-]+\\s[a-zA-Z-]+$";
+
+		Pattern p = Pattern.compile(regex);
+
+		Matcher m = p.matcher(employee.getName());
+
+		if (!m.matches()) {
+			throw new EmployeeValidationException(
+					"Employee name should starts with alphabet, should not have special character and please add surname also");
+		}
+
 		newEmployee.setName(employee.getName());
+
+		if (!(employee.getSalary() >= 30000 && employee.getSalary() <= 100000)) {
+			throw new EmployeeValidationException(
+					"Employee salary should be greater than 30K and less than 1L, your salary: "
+							+ employee.getSalary());
+
+		}
+
 		newEmployee.setSalary(employee.getSalary());
 
 		listEmployees.add(newEmployee);
+
 		Map<String, Employee> mapEmployee = new HashMap<String, Employee>();
 		mapEmployee.put("Employee created: ", newEmployee);
 
@@ -73,12 +105,35 @@ public class EmployeeBuilder {
 
 	}
 
-	public Map<String, Employee> updateEmployee(Employee employee, int id) throws EmployeeNotFoundException {
+	public Map<String, Employee> updateEmployee(Employee employee, int id)
+			throws EmployeeNotFoundException, EmployeeValidationException {
 
-		Employee UpdatedEmployee = employeeBuilder().stream().filter(l -> l.getId() == id).findFirst()
+		Employee UpdatedEmployee = listEmployees.stream().filter(l -> l.getId() == id).findFirst()
 				.orElseThrow(() -> new EmployeeNotFoundException("Employee not found with id: " + id));
 
+		String regex = "(?=^.{0,40}$)^[a-zA-Z-]+\\s[a-zA-Z-]+$";
+
+		Pattern p = Pattern.compile(regex);
+
+		Matcher m = p.matcher(employee.getName());
+
+		if (!m.matches()) {
+			throw new EmployeeValidationException(
+					"Employee name should starts with alphabet, should not have special character and please add surname also");
+		}
+
 		UpdatedEmployee.setName(employee.getName());
+		
+		
+		if (!(employee.getSalary() >= 30000 && employee.getSalary() <= 100000)) {
+			throw new EmployeeValidationException(
+					"Employee salary should be greater than 30K and less than 1L, your salary: "
+							+ employee.getSalary());
+
+		}
+
+
+		
 		UpdatedEmployee.setSalary(employee.getSalary());
 
 		for (int i = 0; i < listEmployees.size(); i++) {
