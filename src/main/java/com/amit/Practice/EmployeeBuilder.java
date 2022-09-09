@@ -6,19 +6,18 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.stream.IntStream;
 
-import org.springframework.context.annotation.EnableMBeanExport;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 @Service
 public class EmployeeBuilder {
 
 	private List<Employee> listEmployees = new ArrayList<Employee>(
-			Arrays.asList(new Employee(2, "Ajeesh Nair", 89000.00), new Employee(1, "Suraj Bhakoria", 74000.00)));
+			Arrays.asList(new Employee(101, "ajeesh_nair", "Ajeesh Nair", 89000.00, "ajeesh", "ROLE_ADMIN"),
+					new Employee(102, "amit_tiwari", "Amit Tiwari", 74000.00, "amit", "ROLE_USER")));
 
 	// list of employees
 
@@ -123,8 +122,7 @@ public class EmployeeBuilder {
 		}
 
 		UpdatedEmployee.setName(employee.getName());
-		
-		
+
 		if (!(employee.getSalary() >= 30000 && employee.getSalary() <= 100000)) {
 			throw new EmployeeValidationException(
 					"Employee salary should be greater than 30K and less than 1L, your salary: "
@@ -132,8 +130,6 @@ public class EmployeeBuilder {
 
 		}
 
-
-		
 		UpdatedEmployee.setSalary(employee.getSalary());
 
 		for (int i = 0; i < listEmployees.size(); i++) {
@@ -147,6 +143,16 @@ public class EmployeeBuilder {
 		mapEmployee.put("Employee updated: ", UpdatedEmployee);
 
 		return mapEmployee;
+
+	}
+
+	// find by Employee user_name
+	public Optional<Employee> findEmployeeByEmployeeUserName(String userName) {
+
+		Optional<Employee> employee = listEmployees.stream().filter(l -> l.getEmployeeUserName().equals(userName))
+				.findFirst();
+
+		return employee;
 
 	}
 

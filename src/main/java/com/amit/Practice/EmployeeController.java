@@ -2,10 +2,12 @@ package com.amit.Practice;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Stream;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.EnableMBeanExport;
+import org.springframework.expression.spel.ast.OpAnd;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -55,6 +57,13 @@ public class EmployeeController {
 			throws EmployeeNotFoundException, EmployeeValidationException
 	{
          return employeeBuilder.updateEmployee(employee, id);		
+	}
+	
+	//Get employee by user name
+	@GetMapping("/employee/name/{userName}") 
+	public Optional<Employee> getByUserName( @PathVariable(value = "userName") String userName) 
+	{
+		   return this.employeeBuilder.findEmployeeByEmployeeUserName(userName);
 	}
 	
 	
