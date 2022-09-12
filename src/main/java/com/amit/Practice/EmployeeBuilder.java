@@ -16,8 +16,8 @@ import org.springframework.stereotype.Service;
 public class EmployeeBuilder {
 
 	private List<Employee> listEmployees = new ArrayList<Employee>(
-			Arrays.asList(new Employee(101, "ajeesh_nair", "Ajeesh Nair", 89000.00, "ajeesh", "ROLE_ADMIN"),
-					new Employee(102, "amit_tiwari", "Amit Tiwari", 74000.00, "amit", "ROLE_USER")));
+			Arrays.asList(new Employee(101, "ajeesh", "Ajeesh Nair", 89000.00, "ajeesh", "ROLE_ADMIN"),
+					new Employee(102, "amit", "Amit Tiwari", 74000.00, "amit", "ROLE_USER")));
 
 	// list of employees
 
@@ -72,6 +72,10 @@ public class EmployeeBuilder {
 		}
 
 		newEmployee.setSalary(employee.getSalary());
+		
+		newEmployee.setEmployeeUserName(employee.getEmployeeUserName());
+		newEmployee.setEmployeePassword(employee.getEmployeePassword());
+		newEmployee.setEmployeeRole(employee.getEmployeeRole());
 
 		listEmployees.add(newEmployee);
 
@@ -131,6 +135,10 @@ public class EmployeeBuilder {
 		}
 
 		UpdatedEmployee.setSalary(employee.getSalary());
+		
+		UpdatedEmployee.setEmployeeUserName(employee.getEmployeeUserName());
+		UpdatedEmployee.setEmployeePassword(employee.getEmployeePassword());
+		UpdatedEmployee.setEmployeeRole(employee.getEmployeeRole());
 
 		for (int i = 0; i < listEmployees.size(); i++) {
 			if (listEmployees.get(i).getId() == id) {
