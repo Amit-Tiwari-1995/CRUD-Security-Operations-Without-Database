@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 public class EmployeeExceptionValidation {
 
 	@ExceptionHandler
-	@ResponseStatus(HttpStatus.BAD_REQUEST)
+	@ResponseStatus(HttpStatus.NOT_FOUND)
 	public Map<String, String> employeeNotFoundExceptionValidation(EmployeeNotFoundException ex) {
 		Map<String, String> Errormap = new HashMap<>();
 		Errormap.put("errorMessage", ex.getMessage());
