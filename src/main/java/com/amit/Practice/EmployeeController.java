@@ -8,6 +8,8 @@ import java.util.stream.Stream;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.EnableMBeanExport;
 import org.springframework.expression.spel.ast.OpAnd;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -36,36 +38,41 @@ public class EmployeeController {
 	}
 
 	@GetMapping("/employee/{id}")
-	public Employee getEmployeeById(@PathVariable(value = "id") int id) throws EmployeeNotFoundException {
+	public ResponseEntity<Employee> getEmployeeById(@PathVariable(value = "id") int id)
+			throws EmployeeNotFoundException {
 
-		return employeeBuilder.getEmployeeById(id);
+		return ResponseEntity.status(HttpStatus.OK).body(employeeBuilder.getEmployeeById(id));
 
 	}
 
 	@PostMapping("employee/create")
-	public Map<String, Employee> createEmployee(@RequestBody Employee employee) throws EmployeeValidationException{
-		return employeeBuilder.createEmployee(employee);
+	public ResponseEntity<Map<String, Employee>> createEmployee(@RequestBody Employee employee)
+			throws EmployeeValidationException {
+
+		return ResponseEntity.status(HttpStatus.CREATED).body(employeeBuilder.createEmployee(employee));
+
 	}
 
-	@DeleteMapping("employee/delete/{id}")  
-	public Map<String, Employee> deleteEmployee(@PathVariable(value = "id") int id) throws EmployeeNotFoundException{
-		return employeeBuilder.deleteEmployeeById(id);
+	@DeleteMapping("employee/delete/{id}")
+	public ResponseEntity<Map<String, Employee>> deleteEmployee(@PathVariable(value = "id") int id)
+			throws EmployeeNotFoundException {
+
+		return ResponseEntity.status(HttpStatus.OK).body(employeeBuilder.deleteEmployeeById(id));
+
 	}
-	
+
 	@PutMapping("employee/update/{id}")
-	public Map<String, Employee> updateEmployee(@RequestBody Employee employee, @PathVariable int id) 
-			throws EmployeeNotFoundException, EmployeeValidationException
-	{
-         return employeeBuilder.updateEmployee(employee, id);		
+	public ResponseEntity<Map<String, Employee>> updateEmployee(@RequestBody Employee employee, @PathVariable int id)
+			throws EmployeeNotFoundException, EmployeeValidationException {
+
+		return ResponseEntity.status(HttpStatus.ACCEPTED).body(employeeBuilder.updateEmployee(employee, id));
+
 	}
-	
-	//Get employee by user name
-	@GetMapping("/employee/name/{userName}") 
-	public Optional<Employee> getByUserName( @PathVariable(value = "userName") String userName) 
-	{
-		   return this.employeeBuilder.findEmployeeByEmployeeUserName(userName);
+
+	// Get employee by user name
+	@GetMapping("/employee/name/{userName}")
+	public Optional<Employee> getByUserName(@PathVariable(value = "userName") String userName) {
+		return this.employeeBuilder.findEmployeeByEmployeeUserName(userName);
 	}
-	
-	
 
 }
